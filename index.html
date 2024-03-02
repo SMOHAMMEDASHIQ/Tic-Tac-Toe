@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 5px;
+            padding-top: 20px;
+            font-size: 50px;
+            animation: changeText 2s infinite alternate; 
+        }
+
+        body {
+            display: flex;
+            background: url('https://img.freepik.com/free-vector/gradient-neon-light-background_23-2149332915.jpg?t=st=1709403656~exp=1709407256~hmac=42961c6ac3e8ea99e0dbac6aedf61971faf1434d123d912e31cd7ffaf44620e1&w=826');
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        table, th, td {
+            border: 5px solid white;
+            padding: 20px;
+            font-size: 20px;
+            text-align: center;
+            font-family: 'Poppins';
+            font-weight: bolder;
+        }
+
+        .winner {
+            font-weight: bold;
+            font-family: 'Poppins';
+            font-size: 40px;
+        }
+
+        .image {
+            flex-basis: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+         
+        .image {
+            flex-basis: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        img {
+            height: 650px;
+        }
+
+        p{
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        @keyframes changeText {
+            0% {
+                content: "Tic Tac Toe";
+            }
+            50% {
+                content: "Tic Tac";
+            }
+            100% {
+                content: "Tic Tac Toe";
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1></h1>
+    <p class="winner" id="winner"></p>
+    <table id="board">
+        <tr>
+            <td onclick="makeMove(0, 0)"></td>
+            <td onclick="makeMove(0, 1)"></td>
+            <td onclick="makeMove(0, 2)"></td>
+        </tr>
+        <tr>
+            <td onclick="makeMove(1, 0)"></td>
+            <td onclick="makeMove(1, 1)"></td>
+            <td onclick="makeMove(1, 2)"></td>
+        </tr>
+        <tr>
+            <td onclick="makeMove(2, 0)"></td>
+            <td onclick="makeMove(2, 1)"></td>
+            <td onclick="makeMove(2, 2)"></td>
+        </tr>
+    </table>
+    <p>Current player: <span id="current_player"></span></p>
+    
+</div>
+
+<div class="image">
+    <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/4c/83/8e/4c838e26-9c8b-6c75-a98b-40b2765eb310/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg" alt="">
+</div>
+
+<script>
+    let board = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+    ];
+    let currentPlayer = 'X';
+
+    function makeMove(row, col) {
+        if (board[row][col] === '') {
+            board[row][col] = currentPlayer;
+            document.getElementById('board').rows[row].cells[col].innerText = currentPlayer;
+            checkWinner();
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('current_player').innerText = currentPlayer;
+        }
+    }
+
+    function checkWinner() {
+        const winningLines = [
+            [[0, 0], [0, 1], [0, 2]],
+            [[1, 0], [1, 1], [1, 2]],
+            [[2, 0], [2, 1], [2, 2]],
+            [[0, 0], [1, 0], [2, 0]],
+            [[0, 1], [1, 1], [2, 1]],
+            [[0, 2], [1, 2], [2, 2]],
+            [[0, 0], [1, 1], [2, 2]],
+            [[0, 2], [1, 1], [2, 0]]
+        ];
+
+        for (let line of winningLines) {
+            const [a, b, c] = line;
+            if (board[a[0]][a[1]] !== '' &&
+                board[a[0]][a[1]] === board[b[0]][b[1]] &&
+                board[a[0]][a[1]] === board[c[0]][c[1]]) {
+                document.getElementById('winner').innerText = `Player ${board[a[0]][a[1]]} wins! 🥳`;
+                return;
+            }
+        }
+
+        if (board.flat().every(cell => cell !== '')) {
+            document.getElementById('winner').innerText = "It's a draw! 👍";
+        }
+    }
+
+    document.querySelector('h1').innerText = "Tic Tac Toe";
+
+    setInterval(() => {
+        const h1Text = document.querySelector('h1').innerText;
+        if (h1Text === "Tic Tac Toe") {
+            document.querySelector('h1').innerText = "Tic Tac";
+        } else {
+            document.querySelector('h1').innerText = "Tic Tac Toe";
+        }
+    }, 2000); 
+
+    document.getElementById('current_player').innerText = currentPlayer;
+</script>
+
+</body>
+</html>
